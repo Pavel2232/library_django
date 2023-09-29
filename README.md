@@ -58,6 +58,7 @@ title
 ```docker
 Выполните команду docker-compose up
 ```
+## Запуск без docker-compose. 
 ```python
 ./manage.py runserver
 ```
