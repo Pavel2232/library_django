@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: psql://test:test@db:5432/test
+    ports:
+      - 8000:8000
+    depends_on:
+      database:
+          condition: service_healthy
+    container_name: library
+  database:
+    image: postgres:12.4-alpine
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_library:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+    container_name: postgres_database
+
+volumes:
+  postgres_data_library:

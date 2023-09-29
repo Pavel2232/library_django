@@ -1,0 +1,11 @@
+# ignore all
+
+**
+
+# except
+!manage.py
+!library_django/**
+!poetry.lock
+!pyproject.toml
+!.env
+!library
