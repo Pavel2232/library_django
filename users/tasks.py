@@ -5,7 +5,13 @@ from celery import shared_task
 
 @shared_task()
 def send_welcome_email_task(email_address: str, name: str):
-
+    """
+        Параметры:
+                email_address (str): recipient's mail
+                name (str): name user for greeting letter
+        Требования:
+                started Celery
+    """
     send_mail(
         'HI',
         from_email=None,
