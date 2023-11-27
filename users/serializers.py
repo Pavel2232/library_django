@@ -18,7 +18,6 @@ class SignupUserSerializer(serializers.ModelSerializer):
             user.email, user.first_name
         )
 
-
         return user
 
 

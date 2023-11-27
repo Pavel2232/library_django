@@ -6,13 +6,12 @@ from rest_framework.response import Response
 
 from users.serializers import SignupUserSerializer, LoginUserSerializer
 
+
 class SignupView(CreateAPIView):
-    """Регистрация пользователя"""
     serializer_class = SignupUserSerializer
 
 
 class LoginUserView(CreateAPIView):
-    """Вход в сервис"""
     serializer_class = LoginUserSerializer
 
     def post(self, request, *args, **kwargs):
