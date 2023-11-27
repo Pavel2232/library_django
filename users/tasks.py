@@ -5,7 +5,7 @@ from celery import shared_task
 
 @shared_task()
 def send_welcome_email_task(email_address: str, name: str):
-    print("sd")
+
     send_mail(
         'HI',
         from_email=None,
@@ -23,4 +23,3 @@ Best,
         recipient_list=[email_address],
         fail_silently=False,
     )
-    print('kil')
