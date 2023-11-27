@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 
 class Author(models.Model):
@@ -13,8 +14,18 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=255, unique=True, db_index=True, verbose_name='Название книги')
+    title = models.CharField(
+        max_length=255,
+        unique=True,
+        verbose_name='Название книги'
+    )
     authors = models.ManyToManyField(Author, related_name='books', verbose_name='Авторы')
+    year = models.DateField(verbose_name='Год издания')
+    isbn = models.CharField(
+        max_length=13,
+        validators=[MinLengthValidator(13), MaxLengthValidator(13)],
+        verbose_name='ISBN уникальный модификатор',
+        unique=True)
 
     class Meta:
         verbose_name = 'Книга'

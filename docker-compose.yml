@@ -7,30 +7,76 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: psql://test:test@db:5432/test
+      DATABASE_URL: mysql://test:test@mysql_db:3306/test
+    depends_on:
+      mysql_db:
+          condition: service_healthy
     ports:
       - 8000:8000
-    depends_on:
-      database:
-          condition: service_healthy
     container_name: library
-  database:
-    image: postgres:12.4-alpine
-    environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: test
+  mysql_db:
+    image: mysql:latest
     restart: always
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data_library:/var/lib/postgresql/data
+    tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U test"]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 5s
       timeout: 30s
       retries: 5
-    container_name: postgres_database
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    container_name: mysql_db
+
+  redis_db:
+    image: redis:latest
+    restart: always
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    container_name: redis_celery
+
+  celery:
+    build:
+      context: .
+    restart: always
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis_db:6379/0
+    command: celery -A library_django worker --loglevel=info --concurrency 1 -E
+    depends_on:
+      api:
+        condition: service_started
+      redis_db:
+        condition: service_started
+    container_name: celery
+
+  flower:
+    build:
+      context: .
+    environment:
+      REDIS_URL: redis://redis_db:6379/0
+
+    command: "celery -A library_django flower --port=5555"
+    depends_on:
+      celery:
+        condition: service_started
+    ports:
+      - '5555:5555'
+    container_name: flower
+
 
 volumes:
-  postgres_data_library:
+  mysql:
+  redis_data:

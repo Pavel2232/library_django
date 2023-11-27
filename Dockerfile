@@ -19,6 +19,7 @@ ENV PYTHONUNBUFFERED 1
 COPY . .
 
 EXPOSE 8000
+ENTRYPOINT ["bash","entrypoint.sh"]
 CMD ["gunicorn", "library_django.wsgi", "-w", "4","-b","0.0.0.0:8000"]
 
 

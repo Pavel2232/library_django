@@ -4,8 +4,9 @@
 
 # except
 !manage.py
-!library_django/**
+!library_django
 !poetry.lock
 !pyproject.toml
 !.env
 !library
+!users
