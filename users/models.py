@@ -1,12 +1,11 @@
 from django.contrib.auth.base_user import AbstractBaseUser
-
 from users.managers import UserManager
 from django.db import models
 
 
 class User(AbstractBaseUser):
     first_name = models.CharField(max_length=200, verbose_name='Имя')
-    email = models.EmailField(max_length=255, null=False,unique=True, verbose_name='Почта')
+    email = models.EmailField(max_length=255, null=False, unique=True, verbose_name='Почта')
     is_active = models.BooleanField(default=True)
     data_joined = models.DateTimeField(auto_now_add=True)
     is_superuser = models.BooleanField(default=False)
