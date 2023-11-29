@@ -17,7 +17,7 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['title', 'authors']
+        fields = ['title', 'authors', 'year', 'isbn']
 
 
 class CreateBookSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class CreateBookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['title', 'authors']
+        fields = ['title', 'authors', 'year', 'isbn']
 
     def is_valid(self, raise_exception=False):
         self._authors = self.initial_data.pop('authors')
